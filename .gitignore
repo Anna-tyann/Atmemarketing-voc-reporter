@@ -1,0 +1,28 @@
+# 原始数据文件（不提交）
+*.xlsx
+*.xls
+
+# 打标结果（太大，不提交）
+*_打标完成版.json
+voc_*_data.json
+voc_tags.json
+voc_stats.json
+
+# 生成的报告
+*_VOC分析报告.html
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# 临时文件
+.voc_temp/
+*.tmp
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
