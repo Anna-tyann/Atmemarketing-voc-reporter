@@ -6,6 +6,18 @@
 
 ---
 
+## 🏢 关于 @me / About @me
+
+> **@me（Atme Marketing）** — 专注跨境品牌出海的增长陪跑服务商。
+> 10+ 年跨境经验 · 覆盖 20+ 国家 · 服务 18+ 品牌。
+> 从策略到落地，陪品牌走完海外增长的每一步。
+>
+> **@me (Atme Marketing)** — Your cross-border brand growth partner. 10+ years experience across 20+ countries, 18+ brands served. We don't just strategize — we run the race with you.
+>
+> 📮 商务合作：anna@atmemarketing.com | 📍 深圳坂田
+
+---
+
 ## 🚀 快速开始
 
 ### 安装
