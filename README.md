@@ -4,17 +4,6 @@
 
 接收 `atmemarketing-voc-tagger` 产出的打标 JSON，一键生成包含散点图、柱状图、痛点卡片、用户画像、使用场景、产品建议和**营销战略方向总结**（社媒内容+网红合作+网站优化+投放人群包）的完整 HTML 报告。
 
----
-
-## 🏢 关于 @me / About @me
-
-> **@me（Atme Marketing）** — 专注跨境品牌出海的增长陪跑服务商。
-> 10+ 年跨境经验 · 覆盖 20+ 国家 · 服务 18+ 品牌。
-> 从策略到落地，陪品牌走完海外增长的每一步。
->
-> **@me (Atme Marketing)** — Your cross-border brand growth partner. 10+ years experience across 20+ countries, 18+ brands served. We don't just strategize — we run the race with you.
->
-> 📮 商务合作：anna@atmemarketing.com | 📍 深圳坂田
 
 ---
 
@@ -92,9 +81,47 @@ atmemarketing-voc-reporter/
 ## 🔗 配套 Skill
 
 - 打标 Skill: [atmemarketing-voc-tagger](https://github.com/Anna-tyann/atmemarketing-voc-tagger)
-
 ---
 
 ## 📄 License
 
 MIT © Atmemarketing
+---
+
+## 🏢 关于 艾特密 / About @me
+
+**艾特密（Atme Marketing）** 是一家专注跨境品牌增长的海外营销陪跑咨询机构。
+
+我们不只出策略——更以 **"陪跑搭档"** 的角色，与品牌并肩走完从市场验证、策略制定到执行落地的每一步。
+
+- 🕐 **10+ 年**跨境营销实战经验
+- 🌍 覆盖 **20+ 国家**市场（北美、欧洲、东南亚、中东）
+- 🏭 服务 **18+ 品牌**，覆盖 10+ 行业
+- ⭐ **97%** 客户满意度
+>
+> **@me (Atme Marketing)** — Your cross-border brand growth partner. 10+ years experience across 20+ countries, 18+ brands served. We don't just strategize — we run the race with you.
+>
+>## 🛠️ 我们提供的服务
+
+| 层级 | 服务 | 适合 |
+|------|------|------|
+| Step 1 | 海外销量机会情报包 | 正在评估海外机会的企业 |
+| Step 2 | 1小时海外增长轻咨询 | 已出海但流量遇瓶颈的企业 |
+| Step 3 | 海外增长实战训练营 | 需要系统提升团队能力的企业 |
+| Step 4 | 基础陪跑 | 需要专业引导的品牌团队 |
+| Step 5 | 深度陪跑 | 寻求全面增长体系搭建的品牌 |
+
+>## 📮 找到我 / Get in Touch
+
+- 💼 **公众号/视频号**：Anna跨境出海营销
+- 📍 **地址**：深圳坂田
+- 📱 **微信**：ianna666
+- 📧 **邮箱**：[anna@atmemarketing.com](mailto:anna@atmemarketing.com)
+
+*联系获取出海洞察 & 合作咨询*
+
+
+> **全球视角起步，品牌战略落地**
+> *"选择艾特密，不只是获得营销服务，更是找到一位共同成长的搭档，陪伴你从 0 到 1 搭建属于自己的海外增长引擎。"*
+> *From Zero to One: Your Growth Partner for Global Markets*
+> *Choosing @me isn't just hiring a marketing service — it's finding a partner who grows with you, helping you build your own overseas growth engine from scratch.*
