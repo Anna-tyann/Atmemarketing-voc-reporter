@@ -1030,6 +1030,167 @@ def build_report_html(tags_data, product_config=None):
     </div>""")
         return "\n".join(cards)
 
+    def build_marketing_strategy():
+        """基于实际标签数据动态生成营销战略方向"""
+        def _top_l2(l1_prefix, n=3, min_mention=1):
+            items = [d for d in l2_table if l1_prefix in d['l1']]
+            items.sort(key=lambda x: -x['mention'])
+            return [d for d in items[:n] if d['mention'] >= min_mention]
+
+        def _find_quotes(l1_prefix, l2_name=None, sentiment=None, n=2):
+            result = []
+            for t in tags_data.get('tags', []):
+                if l1_prefix not in t['l1']:
+                    continue
+                if l2_name and t['l2'] != l2_name:
+                    continue
+                if sentiment and t['sentiment'] != sentiment:
+                    continue
+                q = t.get('quote', '').strip()
+                if q and len(q) > 15:
+                    result.append(q)
+                    if len(result) >= n:
+                        break
+            return result
+
+        def _extract_competitor_names():
+            names = set()
+            competitor_kw = ['Waterpik', 'waterpik', 'Philips', 'philips', 'Oral-B', 'oral-b',
+                           'Sonicare', 'sonicare', 'Furbo', 'furbo', 'Petcube', 'petcube',
+                           'Wyze', 'wyze', 'Ring', 'ring', 'Skymee', 'skymee', 'Enabot', 'enabot',
+                           'EBO', 'ebo', 'COSLUS', 'coslus', 'AquaSonic', 'H2ofloss', 'MySmile',
+                           'Bitvae', 'Nicwell', 'Turewell', 'Pawbo', 'Petzi', 'Victure']
+            for t in tags_data.get('tags', []):
+                if '品牌/竞品对比' in t['l1'] or '竞品对比' in t['l2']:
+                    q = (t.get('quote', '') + ' ' + ' '.join(t.get('keywords', []))).lower()
+                    for kw in competitor_kw:
+                        if kw.lower() in q:
+                            names.add(kw)
+            return sorted(names)[:5]
+
+        # Extract real data
+        top_motivations = _top_l2('购买动因', n=4)
+        top_locations = _top_l2('使用地点', n=3)
+        top_scenarios = _top_l2('使用场景', n=3)
+        top_personas = _top_l2('用户画像', n=3)
+        top_interests = _top_l2('用户兴趣/生活方式', n=4)
+        top_unmet = _top_l2('未满足需求', n=3)
+        top_loyalty = _top_l2('复购/忠诚行为', n=2)
+        competitor_names = _extract_competitor_names()
+        recommend_quotes = _find_quotes('声音类型', '推荐分享', 'positive', n=3)
+        if not recommend_quotes:
+            recommend_quotes = _find_quotes('声音类型', None, 'positive', n=3)
+        compare_quotes = _find_quotes('声音类型', '竞品比较', None, n=2)
+
+        # ── Card 1: Social Media Content Strategy ──
+        content_lines = []
+        if top_motivations:
+            m = top_motivations[:3]
+            mot_text = '、'.join([f"「{d['l2']}」({d['mention']}次)" for d in m])
+            content_lines.append(f'<b>① 购买动因驱动</b>：用户Top购买动因为 {mot_text}，据此规划口碑推荐、自用升级、送礼场景等内容线')
+        if pain_points:
+            p = pain_points[0]
+            content_lines.append(f'<b>② 痛点共鸣型</b>：抓住最大痛点「{p["l2_tag"]}」（正面率仅{p["positive_rate"]}%），制作「从痛点到解决方案」的转变故事')
+        if recommend_quotes:
+            q = recommend_quotes[0][:100]
+            content_lines.append(f'<b>③ 真实UGC素材</b>：利用高赞评论如「{q}...」制作口碑短视频，保留用户真实语言风格')
+
+        persona_desc = '、'.join([d['l2'] for d in top_personas]) if top_personas else '核心用户群'
+        content_html = f'''<div class="insight-card strength">
+          <h4>🎬 社媒内容策略</h4>
+          <p>基于{len(top_motivations)}个购买动因和{len(top_personas)}类用户画像，{product_name}的核心用户群体为<b>{persona_desc}</b>，内容应聚焦以下角度：</p>
+          <p style="margin-top:6px;">{"<br>".join(content_lines) if content_lines else '<p>数据量不足以生成精确内容策略。</p>'}</p>
+          <p style="margin-top:8px;font-size:0.88em;color:#64748b;">💡 <b>执行建议</b>：每篇内容对应一个具体购买动因，使用真实quote中的语言风格。情感hook优先使用评论中出现的真实用户故事。</p>
+        </div>'''
+
+        # ── Card 2: Influencer Strategy ──
+        inf_lines = []
+        if top_locations:
+            loc_text = '、'.join([f'「{d["l2"]}」' for d in top_locations[:2]])
+            inf_lines.append(f'① <b>场景类达人</b>：覆盖{loc_text}等使用场景的垂类红人（基于📍使用地点Top{len(top_locations)}标签）')
+        if top_interests:
+            int_text = '、'.join([f'「{d["l2"]}」' for d in top_interests[:3]])
+            inf_lines.append(f'② <b>兴趣圈层KOL</b>：匹配{int_text}等兴趣领域创作者（基于💡用户兴趣/生活方式Top{len(top_interests)}标签）')
+        if top_personas:
+            per_text = '、'.join([f'「{d["l2"]}」' for d in top_personas[:2]])
+            inf_lines.append(f'③ <b>人群定向达人</b>：受众与{per_text}重合度高的红人（基于👤用户画像维度）')
+        if competitor_names:
+            inf_lines.append(f'④ <b>对比测评博主</b>：可合作{", ".join(competitor_names[:3])}等竞品的对比评测（基于真实竞品提及数据）')
+        brf = recommend_quotes[0][:100] if recommend_quotes else ''
+        inf_html = f'''<div class="insight-card strength">
+          <h4>🤝 海外网红合作方向</h4>
+          <p>基于实际用户数据和标签分析，<b>网红筛选策略</b>如下：</p>
+          <p style="margin-top:6px;">{"<br>".join(inf_lines) if inf_lines else '<p>数据量不足以生成精确网红筛选建议。</p>'}</p>
+          <p style="margin-top:8px;font-size:0.88em;color:#64748b;">💡 <b>Brief素材</b>：将真实用户quote提供给网红作为脚本参考。''' + (f'例如「{brf}...」让网红围绕真实用户痛点进行创作，增强真实感和转化率。' if brf else '') + f'''</p>
+        </div>'''
+
+        # ── Card 3: Website & Landing Page ──
+        web_lines = []
+        if top_locations:
+            web_lines.append(f'① <b>Hero区视觉</b>：以「{top_locations[0]["l2"]}」为核心场景主视觉（{top_locations[0]["mention"]}次提及）')
+        if recommend_quotes:
+            web_lines.append(f'② <b>用户证言轮播</b>：首页植入真实评价如「{recommend_quotes[0][:80]}...」')
+        if pain_points:
+            pain_web = '、'.join([p['l2_tag'] for p in pain_points[:3]])
+            web_lines.append(f'③ <b>痛点解决方案专区</b>：针对「{pain_web}」分别设置解决模块')
+        if competitor_names:
+            web_lines.append(f'④ <b>竞品对比页</b>：基于用户真实提及的{", ".join(competitor_names[:2])}创建对比模块')
+        if top_loyalty:
+            loy_web = '、'.join([d['l2'] for d in top_loyalty])
+            web_lines.append(f'⑤ <b>社交证明</b>：展示「{loy_web}」相关数据（基于🔄复购/忠诚行为维度）')
+        web_html = f'''<div class="insight-card strength">
+          <h4>🌐 网站与落地页优化</h4>
+          <p>基于真实用户行为数据，<b>转化优化策略</b>：</p>
+          <p style="margin-top:6px;">{"<br>".join(web_lines) if web_lines else '<p>数据量不足以生成精确网站优化建议。</p>'}</p>
+          <p style="margin-top:8px;font-size:0.88em;color:#64748b;">💡 <b>FAQ板块</b>：优先回答用户评论中高频出现的实际问题，这些数据直接来自用户真实困惑而非品牌主观猜测。</p>
+        </div>'''
+
+        # ── Card 4: Ad Targeting ──
+        ad_lines = []
+        if pain_points and top_personas:
+            ad_lines.append(f'① <b>痛点人群包</b>：定向关注「{pain_points[0]["l2_tag"]}」问题的用户（{pain_points[0]["mention_count"]}次提及，正面率仅{pain_points[0]["positive_rate"]}%），以解决方案为hook')
+        elif pain_points:
+            ad_lines.append(f'① <b>痛点人群包</b>：定向关注「{pain_points[0]["l2_tag"]}」问题的用户，以「解决{pain_points[0]["l2_tag"]}」为hook')
+        if top_locations and pain_points:
+            ad_lines.append(f'② <b>场景定向人群</b>：对「{top_locations[0]["l2"]}」场景用户投放痛点解决方案素材（该场景{top_locations[0]["mention"]}次提及）')
+        if competitor_names:
+            ad_lines.append(f'③ <b>竞品截流人群</b>：定向搜索「{competitor_names[0]}」等竞品的用户，投放真实用户对比证言素材')
+        if top_interests:
+            int_ad = '、'.join([d['l2'] for d in top_interests[:2]])
+            ad_lines.append(f'④ <b>兴趣扩量人群</b>：基于「{int_ad}」等兴趣标签做Lookalike相似人群扩展')
+        ad_html = f'''<div class="insight-card strength">
+          <h4>🎯 精准投放人群包</h4>
+          <p>基于用户画像 × 购买动因 × 兴趣三维交叉分析，<b>核心投放人群</b>：</p>
+          <p style="margin-top:6px;">{"<br>".join(ad_lines) if ad_lines else '<p>数据量不足以生成精确投放人群建议。</p>'}</p>
+          <p style="margin-top:8px;font-size:0.88em;color:#64748b;">💡 <b>素材差异化策略</b>：每组人群使用不同hook — 痛点人群用「终于解决了[具体痛点]」，场景人群用「在[使用场景]中发现」，竞品人群用「为什么我从[竞品]换成{product_name}」，兴趣人群用「让[兴趣标签]更轻松的秘诀」。</p>
+        </div>'''
+
+        # ── Summary section ──
+        product_dims = sum(1 for k in l1_stats if not any(k.startswith(e) for e in ['🎯','📍','⏰','👤','💡','🏷️','🔮','🔄']))
+        behavioral_dims = len(l1_stats) - product_dims
+        tps = f'「{pain_points[0]["l2_tag"]}」' if pain_points else ''
+        tss = f'「{strengths_list[0]["l2_tag"]}」' if strengths_list else ''
+        comp_summary = '本次分析识别出竞品提及：' + '、'.join(competitor_names) + '，可作为竞争对标和截流营销的数据基础。' if competitor_names else ''
+
+        return f'''<div class="section">
+      <div class="section-title">📌 总结与营销战略方向</div>
+      <p class="summary-text">
+        基于{meta['total_reviews']}条用户评论的{meta['total_tags']}个标签深度分析，覆盖<b>{product_dims}个产品功能维度</b>和<b>{behavioral_dims}个行为场景维度</b>，
+        {product_name}的核心用户洞察可转化为以下<b>数据驱动的营销战略方向</b>：
+      </p>
+      <div class="insight-grid">
+        {content_html}
+        {inf_html}
+        {web_html}
+        {ad_html}
+      </div>
+      <p class="summary-text" style="margin-top:16px;">
+        <b>数据驱动总结</b>：从{meta['total_reviews']}条评论中提取的核心发现 —
+        最大痛点是{tps or '可靠性相关维度'}，最大优势是{tss or '产品核心功能'}。
+        建议每季度更新VOC分析，持续追踪用户关注点变化，及时调整策略。
+        {comp_summary}
+      </p>
+    </div>'''
     # Assemble full HTML
     html = f"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -1168,40 +1329,8 @@ def build_report_html(tags_data, product_config=None):
   </table>
 </div>
 
-<div class="section">
-  <div class="section-title">📌 总结与营销战略方向</div>
-  <p class="summary-text">
-    基于{meta['total_reviews']}条用户评论的{meta['total_tags']}个标签深度分析，{product_name}的核心用户洞察可以转化为以下<b>营销战略方向</b>：
-  </p>
-  <div class="insight-grid">
-    <div class="insight-card strength">
-      <h4>🎬 社媒内容策略</h4>
-      <p>基于购买动因和用户画像数据，确定<b>三大内容支柱</b>：① "真实对比"型内容——展示为什么用户从竞品转向本产品；② "使用场景"型内容——深度展示家庭浴室、旅行、户外等真实使用场景；③ "用户证言"型内容——提炼评论中高情感密度的用户故事作为视频素材。</p>
-      <p style="margin-top:8px;font-size:0.88em;color:#64748b;">💡 <b>内容角度建议</b>：围绕评论中高频出现的"changed my life""never going back""worth every penny"等情感表述制作UGC风格短视频。每条视频对应一个具体的购买动因（如"牙医推荐""替换旧设备""家人推荐"）。</p>
-    </div>
-    <div class="insight-card strength">
-      <h4>🤝 海外网红合作方向</h4>
-      <p>基于用户兴趣和画像数据，<b>网红筛选标准</b>为：① 口腔健康/个人护理垂直领域，受众与牙套佩戴者、牙龈敏感用户重合；② 科技数码测评类博主——覆盖"科技数码爱好者"兴趣圈层；③ 旅行/户外生活方式博主——覆盖"旅行酒店""户外露营"使用场景；④ 家庭/亲子类博主——覆盖"父母为家人购买"决策路径。</p>
-      <p style="margin-top:8px;font-size:0.88em;color:#64748b;">💡 <b>Brief关键点</b>：让网红突出"从[竞品]转投[本产品]的故事线"+"真实使用前后对比"+"牙医推荐背书"。提供评论中高赞的用户quote作为网红脚本素材。</p>
-    </div>
-    <div class="insight-card strength">
-      <h4>🌐 网站与落地页优化</h4>
-      <p>基于使用地点和场景数据，<b>网站视觉策略</b>：① Hero区展示"浴室日常"+"旅行便携"双场景并排图；② 首屏下方直接展示真实用户quote轮播（取自评论中高赞内容）；③ 增加"专业人士推荐"信任徽章区——引用评论中dentist/hygienist相关quote；④ 产品页增加"为什么从[竞品名称]转到[本产品]的3个理由"对比模块。</p>
-      <p style="margin-top:8px;font-size:0.88em;color:#64748b;">💡 <b>转化优化</b>：在checkout页面展示"XX%用户将本产品推荐给家人朋友"等社交证明数据，降低购买决策焦虑。</p>
-    </div>
-    <div class="insight-card strength">
-      <h4>🎯 精准投放人群包</h4>
-      <p>基于用户画像+购买动因+兴趣三维交叉，定义<b>四大核心投放人群</b>：① 正畸/牙套人群 × 牙医推荐动因 × 口腔健康兴趣；② 中老年口腔护理人群 × 牙龈健康刚需 × 性价比关注；③ 家庭购买决策者 × 送礼/家人推荐动因 × 家庭生活方式；④ 旅行活跃用户 × 便携性需求 × 户外运动兴趣。</p>
-      <p style="margin-top:8px;font-size:0.88em;color:#64748b;">💡 <b>素材方向</b>：每组人群使用不同的痛点hook——人群①"Braces-friendly water flosser"、人群②"Gum health improved in days"、人群③"Perfect gift for the whole family"、人群④"Take your oral care anywhere"。</p>
-    </div>
-  </div>
-  <p class="summary-text" style="margin-top:16px;">
-    总结：VOC数据驱动的营销战略核心是<b>将真实的用户声音转化为有说服力的营销内容</b>。本报告中提取的购买动因、使用场景、用户画像和兴趣标签，为社媒内容规划、网红合作Brief、网站信息架构和精准广告投放提供了数据支撑。建议每季度更新一次VOC分析，持续追踪用户关注点的变化，及时调整营销策略方向。
-  </p>
+{build_marketing_strategy()}
 </div>
-
-</div>
-
 <div class="footer">
   {product_name}用户评论分析报告 · 基于 {meta['total_reviews']} 条评论 · {meta['total_tags']} 条标签 · 生成于 {meta['generated_at']}
 </div>
