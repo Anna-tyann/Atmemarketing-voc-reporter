@@ -12,116 +12,108 @@ import os
 import uuid
 
 # ============================================================
-# 0. 默认标签体系（冲牙器/口腔护理类）
+# 0. 默认标签体系（品类通用框架）
 # ============================================================
+# 通用化的 DEFAULT_TAG_SYSTEM - 适配多品类
+# 通用化标签体系 - 适配多品类（清洁、健康、美容、科技等）
+
 DEFAULT_TAG_SYSTEM = {
-    "清洁与口腔健康": {
+    "核心功能与效果": {
         "color": "#2563eb",
         "l2": {
-            "清洁效果": {"match": ["clean", "cleaning", "cleaner", "fresher", "fresh feeling", "thorough", "deep clean", "works well", "so clean", "much cleaner", "really cleans", "does a great job", "effective", "effectively"]},
-            "适配特殊口腔场景": {"match": ["braces", "bracket", "implant", "crown", "veneer", "ortho", "sensitive gum", "sensitive teeth", "bridge", "dental work", "periodontal", "deep pocket", "food trap", "gum disease"]},
-            "牙龈健康改善": {"match": ["gum health", "gum improve", "healthier gum", "gum feel", "bleeding stop", "less bleed", "gum line", "massage gum", "stimulate gum"]},
-            "替代牙线效果": {"match": ["easier than floss", "instead of floss", "better than floss", "not a flosser", "hate floss", "alternative to floss", "replaces floss", "vs floss", "traditional floss"]},
-            "食物残渣清除": {"match": ["food particle", "food stuck", "food trap", "remove food", "get food out", "leftover food", "debris", "stuff between teeth"]},
+            "基础功能表现": {"match": ["clean", "cleaning", "cleaner", "works well", "does its job", "effective", "efficiently", "thorough", "deep", "powerful", "really works", "does a great job"]},
+            "特定场景适配": {"match": ["specific", "special", "particular", "unique", "certain situation", "my case", "for my needs", "exactly what", "perfect for"]},
+            "健康/舒适度改善": {"match": ["health", "healthy", "improve", "better", "feel better", "healthier", "comfortable", "relief", "soothe", "massage"]},
+            "替代/升级其他产品": {"match": ["easier than", "instead of", "better than", "replaces", "upgrade from", "switched from", "not going back", "vs", "compared to"]},
+            "深度清理能力": {"match": ["remove", "get rid of", "clear", "stuck", "debris", "leftover", "particle", "residue", "buildup", "get out"]},
         }
     },
-    "水压性能": {
+    "性能表现": {
         "color": "#7c3aed",
         "l2": {
-            "水压强度与调节": {"match": ["pressure", "water pressure", "powerful", "strong", "gentle", "pressure setting", "adjustable", "pressure level", "too strong", "too weak", "not strong enough", "pressure is great", "perfect pressure", "two setting", "3 setting", "mode"]},
-            "使用过程中的整洁度": {"match": ["mess", "messy", "spray", "splash", "splatter", "water everywhere", "water all over", "drip", "drool", "water get", "water goes", "water running", "all over the", "spraying water"]},
-            "噪音水平": {"match": ["noise", "noisy", "loud", "quiet", "silent", "sound level", "hum", "buzz", "roar", "whisper quiet", "not loud"]},
+            "速度与效率": {"match": ["fast", "quick", "speed", "slow", "takes forever", "takes too long", "efficient", "time saving", "instant", "immediate"]},
+            "动力/强度控制": {"match": ["power", "powerful", "strength", "strong", "weak", "gentle", "intensity", "force", "pressure", "mode", "setting", "level", "adjust"]},
+            "运行噪音": {"match": ["noise", "noisy", "loud", "quiet", "silent", "sound", "whisper", "roar", "annoying sound"]},
+            "容量与续航": {"match": ["capacity", "tank", "hold", "size", "enough", "not enough", "small", "large", "run out", "need more", "refill"]},
         }
     },
-    "产品设计与做工": {
-        "color": "#059669",
+    "设计与做工": {
+        "color": "#f59e0b",
         "l2": {
-            "水箱容量": {"match": ["tank", "reservoir", "capacity", "hold water", "fill", "refill", "enough water", "not enough water", "small tank", "run out of water", "empty", "need more water", "canister", "water capacity"]},
-            "人机设计与握持感": {"match": ["ergonomic", "grip", "comfortable to hold", "easy to hold", "fits in hand", "handle", "lightweight", "light and easy", "balanced", "design is", "slim", "compact design"]},
-            "做工质量": {"match": ["build quality", "well made", "sturdy", "solid", "durable", "quality material", "premium feel", "good quality", "well built", "constructed well", "quality product", "cheap plastic", "flimsy"]},
-            "卫生与清洁维护": {"match": ["mold", "mildew", "fungus", "bacteria", "sanitary", "hygiene", "clean the tank", "clean reservoir", "clean machine", "slime", "gunk", "dirty inside", "hard to clean"]},
-            "排水与干燥": {"match": ["drain", "dry", "water left", "water out", "empty completely", "get all the water", "residual water", "wet inside", "dry out", "never completely dry", "impossible to get all water"]},
-            "喷嘴与配件": {"match": ["nozzle", "tip", "attachment", "jet tip", "different tip", "multiple tip", "extra tip", "replacement tip", "brush tip", "pik pocket", "orthodontic tip"]},
-            "收纳便利性": {"match": ["storage", "store", "put away", "cabinet", "drawer", "organize", "charger base", "dock", "stand", "counter space"]},
-            "防漏设计": {"match": ["leak", "leaking", "seal", "watertight", "spill proof", "doesn't leak", "no leak", "not leak", "leak proof"]},
+            "外观设计": {"match": ["look", "appearance", "aesthetic", "design", "stylish", "modern", "sleek", "pretty", "ugly", "cheap looking"]},
+            "人机设计与握持感": {"match": ["ergonomic", "grip", "comfortable to hold", "easy to hold", "fits in hand", "handle", "lightweight", "light and easy", "balanced", "slim"]},
+            "做工质量": {"match": ["build quality", "well made", "sturdy", "solid", "durable", "quality material", "premium feel", "good quality", "well built", "flimsy", "cheap plastic"]},
+            "卫生与清洁维护": {"match": ["mold", "mildew", "bacteria", "sanitary", "hygiene", "clean the", "clean it", "maintain", "slime", "gunk", "dirty", "hard to clean"]},
+            "密封与防漏": {"match": ["leak", "drip", "spill", "water everywhere", "mess", "seal", "tight", "secure", "waterproof", "wet"]},
         }
     },
-    "便携与出行": {
-        "color": "#d97706",
+    "便携性": {
+        "color": "#10b981",
         "l2": {
-            "便携性": {"match": ["portable", "cordless", "wireless", "convenient", "compact", "easy to carry", "mobile", "on the go", "take anywhere", "no cord", "no wire", "cordless is", "love that it is cordless"]},
-            "旅行适配性": {"match": ["travel", "trip", "vacation", "pack", "luggage", "bag", "hotel", "abroad", "international", "airport", "carry on", "fits in", "cottage", "camping", "take with me", "greece", "perfect for travel", "great for travel"]},
+            "体积大小": {"match": ["size", "compact", "small", "tiny", "bulky", "large", "huge", "space", "footprint", "takes up"]},
+            "重量": {"match": ["weight", "heavy", "light", "lightweight", "portable", "carry", "lug around"]},
+            "旅行与携带": {"match": ["travel", "trip", "vacation", "portable", "on the go", "bring with", "pack", "suitcase", "carry on"]},
         }
     },
     "电池与续航": {
-        "color": "#dc2626",
+        "color": "#ef4444",
         "l2": {
-            "电池供电方式": {"match": ["battery", "cordless", "wireless", "rechargeable", "no cord", "power cord", "battery powered", "electric", "plug in", "USB rechargeable", "AA battery", "AAA", "lithium", "USB C"]},
-            "续航时间": {"match": ["battery life", "days", "week", "use time", "run time", "how long", "hold charge", "stay charged", "lasted", "doesn't last", "only last", "die after", "died after", "few minutes", "3/4 days", "few day", "not hold charge"]},
-            "充电体验": {"match": ["charge", "charging", "recharge", "hours to charge", "long to charge", "charge speed", "quick charge", "slow charge", "day to charge", "24 hour", "48 hr", "charger", "charging port", "charging cable", "won't charge", "doesn't charge"]},
+            "续航时长": {"match": ["battery life", "last", "run time", "charge", "hold charge", "battery drain", "die quickly", "long battery"]},
+            "充电体验": {"match": ["charging", "charge time", "recharge", "USB", "wireless charge", "fast charge", "charger", "cable"]},
         }
     },
-    "易用性与操作": {
-        "color": "#0891b2",
+    "易用性": {
+        "color": "#06b6d4",
         "l2": {
-            "整体易用性": {"match": ["easy to use", "simple", "intuitive", "user friendly", "straightforward", "no problem", "easy to figure", "easy to operate", "hassle free", "fuss", "difficult to use", "hard to use", "confusing", "complicated", "learning curve"]},
-            "设置与安装": {"match": ["setup", "set up", "assemble", "install", "instruction", "manual", "ready to use", "out of box", "getting started", "first use", "unbox", "fill with water", "how to use"]},
+            "上手难度": {"match": ["easy to use", "simple", "straightforward", "intuitive", "complicated", "confusing", "hard to figure", "difficult", "learning curve"]},
+            "操作便捷性": {"match": ["convenient", "hassle", "easy", "user friendly", "one button", "automatic", "effortless"]},
+            "配件与存储": {"match": ["accessories", "tip", "attachment", "nozzle", "head", "storage", "case", "holder", "organize"]},
+            "说明书清晰度": {"match": ["instruction", "manual", "guide", "directions", "clear", "confusing", "no manual", "hard to understand"]},
         }
     },
     "价格与价值": {
-        "color": "#be185d",
+        "color": "#8b5cf6",
         "l2": {
-            "性价比": {"match": ["price", "cost", "expensive", "cheap", "worth", "value", "good value", "great value", "overpriced", "reasonable", "fair price", "worth the money", "worth every penny", "not worth", "waste of money", "for the price", "affordable"]},
-            "竞品价格对比": {"match": ["cheaper than", "more expensive than", "compared to", "vs", "alternative", "similar price", "competitor", "other brand", "other model", "old model", "previous", "upgrade from"]},
+            "价格评价": {"match": ["price", "cost", "expensive", "cheap", "affordable", "pricey", "overpriced", "reasonable"]},
+            "性价比": {"match": ["value", "bang for buck", "worth it", "worth the money", "good deal", "bargain", "not worth", "great value"]},
         }
     },
     "可靠性与售后": {
-        "color": "#9333ea",
+        "color": "#ec4899",
         "l2": {
-            "产品可靠性": {"match": ["broke", "broken", "stopped working", "defective", "DOA", "dead on arrival", "faulty", "malfunction", "died", "fail", "not working", "quit", "only worked for", "lasted only", "after month", "week and stopped", "no longer work"]},
-            "售后服务体验": {"match": ["customer service", "support", "warranty", "guarantee", "replace", "replacement", "contacted", "emailed", "called", "response", "helpful support", "no help", "won't help", "return", "refund", "money back", "return policy"]},
-            "包装与物流": {"match": ["packaging", "package", "box", "arrived", "delivery", "shipping", "damaged in", "came in", "delivered", "shipped", "fast delivery", "quick shipping", "prime", "next day"]},
-            "商品与描述一致性": {"match": ["as described", "accurate", "description", "advertised", "picture", "photo", "exactly like", "not as described", "different from expected", "what i expected", "expectation", "surprised", "better than expected", "worse than expected"]},
-            "商品新旧状态": {"match": ["used product", "refurbished", "open box", "second hand", "not new", "already used", "dirty when arrived", "fingerprint", "may have been used", "looks used"]},
+            "耐用性": {"match": ["durable", "durability", "last", "break", "broke", "stopped working", "longevity", "still going", "still works"]},
+            "故障率": {"match": ["defect", "malfunction", "fail", "stopped", "died", "quit working", "broke down", "issue", "problem", "doesn't work"]},
+            "售后服务": {"match": ["customer service", "support", "warranty", "replacement", "refund", "return", "contact", "response", "helped"]},
         }
     },
-    "品牌与推荐": {
-        "color": "#65a30d",
+    "品牌与推荐度": {
+        "color": "#f97316",
         "l2": {
-            "推荐意愿": {"match": ["recommend", "would recommend", "highly recommend", "definitely recommend", "recommend to", "suggest", "everyone should", "must have", "must buy", "worth buying", "should get"]},
-            "专业人士推荐": {"match": ["dentist", "orthodontist", "hygienist", "dental hygienist", "periodontist", "doctor", "professional", "recommended by", "told me to get", "advised", "prescribed", "dental office"]},
-            "品牌信任": {"match": ["Waterpik", "brand", "trust", "reputable", "reliable brand", "known brand", "best brand", "leading", "top rated", "name brand", "cheap brand", "generic", "knockoff", "off brand"]},
-            "配件完整性": {"match": ["comes with", "included", "accessory", "extra", "case", "bag", "multiple tip", "travel case", "storage case", "bonus", "included tip", "comes in", "package includes"]},
+            "品牌信任": {"match": ["brand", "trust", "reputation", "well known", "famous", "heard of", "reliable brand"]},
+            "推荐意愿": {"match": ["recommend", "suggest", "tell friends", "worth buying", "must have", "don't buy", "stay away", "highly recommend"]},
         }
     },
     "整体评价": {
-        "color": "#0d9488",
+        "color": "#64748b",
         "l2": {
-            "整体满意度": {"match": ["great", "excellent", "amazing", "love", "perfect", "best", "wonderful", "fantastic", "happy", "satisfied", "pleased", "impressed", "outstanding", "exceed", "better than expected", "good purchase", "glad", "worth it", "game changer"]},
-            "整体不满": {"match": ["terrible", "horrible", "awful", "bad", "worst", "disappointed", "waste", "useless", "junk", "garbage", "regret", "poor product", "not worth it", "don't bother", "stay away", "avoid", "worst purchase", "hate it", "returning it"]},
+            "综合满意度": {"match": ["overall", "in general", "satisfied", "happy with", "pleased", "content", "disappointed", "unhappy"]},
+            "超出/低于预期": {"match": ["expect", "expected", "surprise", "impressed", "amazing", "exceeded", "let down", "not as good", "better than expected"]},
+            "极端好评": {"match": ["love", "best", "perfect", "amazing", "excellent", "fantastic", "wonderful", "favorite", "game changer", "life saver", "changed my life"]},
+            "极端差评": {"match": ["worst", "terrible", "horrible", "awful", "disappointed", "waste", "useless", "junk", "garbage", "regret", "poor product", "not worth it", "don't bother", "stay away", "avoid", "hate it"]},
         }
     },
 }
 
-# Default colors for when tag_system doesn't include colors
-DEFAULT_COLORS = [
-    "#2563eb", "#7c3aed", "#059669", "#d97706", "#dc2626",
-    "#0891b2", "#be185d", "#9333ea", "#65a30d", "#0d9488", "#6b7280"
-]
+# 行为场景维度（12个）- 品类通用
 
-# ============================================================
-# 0.5. 行为与场景维度（通用，适配任意品类）
-#      vocovoca 16维框架扩展：购买动因/使用地点/用户画像/用户兴趣/使用场景/品牌对比/未满足需求
-# ============================================================
 BEHAVIORAL_DIMENSIONS = {
     "🎯 购买动因": {
         "color": "#f97316",
         "dim_type": "behavioral",
         "l2": {
             "专业人士推荐购买": {
-                "match": ["dentist recommend", "orthodontist recommend", "hygienist recommend", "doctor recommend",
-                         "prescribed", "told me to get", "advised me", "professional recommend", "dental hygienist told",
-                         "periodontist suggest", "my dentist", "dentist said", "recommended by my"]
+                "match": ["professional recommend", "expert recommend", "specialist recommend", "doctor recommend",
+                         "prescribed", "told me to get", "advised me", "specialist said", "recommended by"]
             },
             "社交媒体/短视频种草": {
                 "match": ["saw on tiktok", "saw on youtube", "saw a video", "watched a review", "influencer",
@@ -130,62 +122,36 @@ BEHAVIORAL_DIMENSIONS = {
             },
             "朋友/家人推荐": {
                 "match": ["friend recommend", "family recommend", "my mom", "my dad", "my sister", "my brother",
-                         "my wife", "my husband", "coworker recommend", "neighbor", "someone told",
-                         "my son", "my daughter", "relative", "friend told", "recommended by a friend"]
+                         "my wife", "my husband", "coworker recommend", "neighbor", "someone told"]
             },
-            "替换旧产品/升级": {
-                "match": ["replace my old", "upgrade from", "old one broke", "old one died", "my previous",
-                         "upgraded to", "replacing my", "new one because", "my old", "old version",
-                         "wore out", "worn out", "gave up the ghost", "stopped working so i"]
+            "刚需驱动(特定问题)": {
+                "match": ["need", "needed", "have to", "must", "necessary", "essential", "can't without",
+                         "problem", "issue", "suffer", "struggle", "pain", "condition"]
             },
-            "价格/促销驱动": {
-                "match": ["on sale", "discount", "deal", "coupon", "prime day", "black friday", "clearance",
-                         "price drop", "lightning deal", "bargain", "marked down", "promotion", "affordable price",
-                         "cheap enough", "half price", "so cheap", "good price"]
+            "自用升级/替换旧产品": {
+                "match": ["upgrade", "replace", "old one", "previous", "last one", "broke", "stopped working",
+                         "better than", "improvement", "switched from"]
             },
-            "刚需驱动(口腔问题)": {
-                "match": ["gum disease", "bleeding gum", "cavity", "tooth pain", "gum problem", "infection",
-                         "dentist told me i need", "periodontal", "gingivitis", "tooth decay", "bad breath",
-                         "deep pockets", "receding gum", "sensitive teeth", "plaque buildup"]
-            },
-            "送礼购买": {
-                "match": ["gift for", "bought for my", "gave to", "present for", "christmas gift", "birthday gift",
-                         "mother's day", "father's day", "gift idea", "stocking stuffer", "bought this as a gift"]
-            },
-            "Amazon评分/评论驱动": {
-                "match": ["amazon rating", "amazon review", "highly rated", "best seller", "top rated",
-                         "amazon choice", "based on reviews", "read the reviews", "reviews were good",
-                         "ratings were", "star rating", "positive review"]
-            },
-            "品牌口碑/认知": {
-                "match": ["brand i trust", "known brand", "reputable brand", "always buy", "loyal to",
-                         "heard good things", "well known", "popular brand", "reliable brand", "trusted name"]
+            "礼物/送人购买": {
+                "match": ["gift", "present", "for my", "bought for", "gave to", "as a gift", "christmas", "birthday"]
             },
         }
     },
     "📍 使用地点": {
-        "color": "#06b6d4",
+        "color": "#3b82f6",
         "dim_type": "behavioral",
         "l2": {
-            "家庭浴室/卫生间": {
-                "match": ["bathroom", "in the shower", "at home", "my bathroom", "sink", "mirror",
-                         "bathroom counter", "shower caddy", "bathroom routine", "home use", "at my house"]
-            },
-            "旅行/酒店/民宿": {
-                "match": ["hotel", "travel", "airbnb", "vacation", "on the road", "while traveling",
-                         "on a trip", "when i travel", "on vacation", "travel bag", "pack for trip", "abroad"]
-            },
-            "办公室/工作场所": {
-                "match": ["office", "at work", "workplace", "desk", "cubicle", "work bathroom",
-                         "after lunch at work", "at the office", "my desk", "work bag"]
+            "家庭/室内": {
+                "match": ["home", "house", "bathroom", "bedroom", "kitchen", "living room", "at home", "indoors"]
             },
             "户外/露营/房车": {
-                "match": ["camping", "hiking", "outdoor", "rv", "campervan", "cottage", "cabin",
-                         "backpacking", "outdoors", "in the tent", "glamping"]
+                "match": ["outdoor", "camping", "rv", "camper", "van", "travel", "on the road", "wilderness"]
             },
-            "健身房/运动场所": {
-                "match": ["gym", "fitness", "locker room", "after workout", "gym bag", "fitness center",
-                         "yoga studio", "sports", "athletic"]
+            "办公室/工作场所": {
+                "match": ["office", "work", "workplace", "desk", "at work", "during work"]
+            },
+            "健身房/运动场": {
+                "match": ["gym", "fitness", "workout", "locker room", "sports", "exercise"]
             },
         }
     },
@@ -193,56 +159,27 @@ BEHAVIORAL_DIMENSIONS = {
         "color": "#8b5cf6",
         "dim_type": "behavioral",
         "l2": {
-            "日常早晚口腔护理": {
-                "match": ["morning routine", "night routine", "before bed", "after waking", "every morning",
-                         "every night", "daily routine", "twice a day", "part of my routine", "everyday use",
-                         "my daily", "each morning", "each night"]
+            "日常例行": {
+                "match": ["daily", "every day", "morning", "evening", "routine", "regularly", "habit"]
             },
-            "饭后即时清洁": {
-                "match": ["after meal", "after eating", "after lunch", "after dinner", "after breakfast",
-                         "food stuck", "after i eat", "post meal", "after food", "clean after eating"]
+            "特定活动前后": {
+                "match": ["before", "after", "pre", "post", "during", "while", "when"]
             },
-            "正畸/牙套护理": {
-                "match": ["with braces", "braces care", "cleaning braces", "around brackets", "orthodontic care",
-                         "invisalign", "with my braces", "braces friendly", "for my braces", "around my braces"]
+            "休闲时使用": {
+                "match": ["watch tv", "relax", "leisure", "free time", "weekend", "downtime"]
             },
-            "牙龈/牙周病护理": {
-                "match": ["gum disease treatment", "periodontal care", "gum therapy", "healing gums",
-                         "for my gum", "gum treatment", "gum health routine", "gingivitis care", "bleeding gum fix"]
-            },
-            "种植牙/修复体护理": {
-                "match": ["implant care", "crown cleaning", "bridge care", "dental work care",
-                         "around my implant", "around my crown", "veneer", "denture", "fake teeth"]
-            },
-            "送礼/推荐他人使用": {
-                "match": ["bought for", "gift for", "gave to", "recommended to", "got for my",
-                         "purchased for my", "for my mom", "for my husband", "for my wife", "for my kid"]
+            "特殊场合/需求": {
+                "match": ["special occasion", "event", "party", "date", "important", "when i need"]
             },
         }
     },
     "👤 用户画像": {
-        "color": "#ec4899",
+        "color": "#06b6d4",
         "dim_type": "behavioral",
         "l2": {
-            "正畸/牙套佩戴者": {
-                "match": ["braces", "bracket", "invisalign", "orthodontic", "orthodontist",
-                         "my braces", "with braces", "wearing braces", "braces wearer", "clear aligner"]
-            },
-            "牙龈敏感/出血用户": {
-                "match": ["sensitive gum", "bleeding gum", "gum bleed", "my gum bleed", "sensitive teeth",
-                         "gum sensitivity", "tender gum", "sore gum", "my gum are", "gum recession"]
-            },
-            "种植牙/牙冠/修复用户": {
-                "match": ["implant", "crown", "bridge", "veneer", "denture", "dental implant",
-                         "my implant", "my crown", "my bridge", "dental work", "fake tooth"]
-            },
-            "牙周/牙龈疾病患者": {
-                "match": ["periodontitis", "gum disease", "deep pocket", "periodontal disease", "gingivitis",
-                         "gum infection", "periodontal pocket", "gum problem", "receding gum", "bone loss"]
-            },
             "中老年用户(50+)": {
-                "match": ["i am 5", "i am 6", "i am 7", "i am 8", "i'm 5", "i'm 6", "i'm 7", "i'm 8",
-                         "retired", "senior", "at my age", "as a", "years old", "elderly", "my age",
+                "match": ["senior", "older", "elder", "age", "50", "60", "70", "80",
+                         "retired", "at my age", "as a", "years old", "elderly",
                          "grandma", "grandpa", "grandparent"]
             },
             "父母/家庭购买者": {
@@ -253,11 +190,11 @@ BEHAVIORAL_DIMENSIONS = {
                 "match": ["business travel", "work travel", "frequent traveler", "road warrior",
                          "business trip", "travel for work", "commuter", "on the go", "mobile professional"]
             },
-            "口腔护理新手": {
+            "新手/首次使用者": {
                 "match": ["first time", "never used before", "new to this", "just started", "beginner",
-                         "first water flosser", "my first", "never tried", "new user", "just got my first"]
+                         "my first", "never tried", "new user", "just got my first", "first one"]
             },
-            "口腔护理重度用户": {
+            "重度/资深用户": {
                 "match": ["i am obsessed", "addicted to", "can't live without", "my holy grail",
                          "swear by", "game changer", "best thing ever", "life changing", "changed my life"]
             },
@@ -267,13 +204,13 @@ BEHAVIORAL_DIMENSIONS = {
         "color": "#14b8a6",
         "dim_type": "behavioral",
         "l2": {
-            "口腔健康高度关注": {
-                "match": ["oral health", "dental health", "tooth health", "gum health", "dental hygiene",
-                         "oral hygiene", "teeth care", "preventive dental", "regular dental check", "dental visit"]
+            "健康/养生关注": {
+                "match": ["health", "healthy", "wellness", "preventive", "healthcare", "health conscious",
+                         "take care of", "better health", "stay healthy", "health routine"]
             },
             "个人护理/美容达人": {
                 "match": ["beauty routine", "self care", "personal care", "grooming", "skincare",
-                         "beauty", "wellness", "spa", "pampering", "treat yourself", "self love"]
+                         "beauty", "spa", "pampering", "treat yourself", "self love"]
             },
             "科技数码爱好者": {
                 "match": ["gadget", "tech", "latest tech", "new technology", "smart device",
@@ -289,92 +226,130 @@ BEHAVIORAL_DIMENSIONS = {
             },
             "性价比/精明消费者": {
                 "match": ["best bang", "best value", "compare price", "did my research", "researched",
-                         "shop around", "deal hunter", "bargain hunter", "thrifty", "on a budget",
-                         "worth the money", "good investment", "smart buy"]
-            },
-            "环保/可持续关注": {
-                "match": ["eco friendly", "sustainable", "environmentally", "reusable", "reduce plastic",
-                         "green", "biodegradable", "zero waste", "rechargeable instead", "less waste"]
+                         "shop around", "best deal", "budget", "save money", "cost effective"]
             },
         }
     },
     "🏷️ 品牌/竞品对比": {
-        "color": "#78716c",
+        "color": "#f59e0b",
         "dim_type": "behavioral",
         "l2": {
-            "对比 Waterpik": {
-                "match": ["waterpik", "water pik", "water-pik"]
+            "竞品比较": {
+                "match": ["better than", "compared to", "vs", "versus", "instead of", "switched from",
+                         "tried other", "other brand", "comparison"]
             },
-            "对比 Philips Sonicare": {
-                "match": ["philips", "sonicare", "philip", "phillips"]
-            },
-            "对比 Oral-B": {
-                "match": ["oral b", "oralb", "oral-b", "braun"]
-            },
-            "对比 COSLUS": {
-                "match": ["coslus", "coslus"]
-            },
-            "对比其他品牌/通用": {
-                "match": ["other brand", "compared to", "vs", "versus", "cheaper brand", "expensive brand",
-                         "name brand", "generic", "off brand", "different brand", "other model"]
+            "品牌忠诚": {
+                "match": ["always buy", "only use", "stick with", "loyal", "trust this brand", "brand fan"]
             },
         }
     },
     "🔮 未满足需求/期望": {
-        "color": "#ef4444",
+        "color": "#ec4899",
         "dim_type": "behavioral",
         "l2": {
-            "渴望更长续航": {
-                "match": ["wish the battery", "wish it lasted", "if only the battery", "need longer battery",
-                         "battery life could be", "hope the battery", "want more battery", "battery should last",
-                         "needs better battery", "battery is the only", "wish it would last"]
+            "功能缺失": {
+                "match": ["wish it had", "missing", "lacking", "doesn't have", "no", "would be better if",
+                         "needs", "should have", "want"]
             },
-            "渴望更大水箱": {
-                "match": ["wish the tank", "wish it held more", "need bigger tank", "larger reservoir",
-                         "tank is too small", "more water capacity", "wish it had a bigger", "need more water"]
+            "性能不足": {
+                "match": ["not strong enough", "not powerful", "weak", "could be better", "not as good",
+                         "disappointing", "underwhelming"]
             },
-            "渴望Type-C/USB-C充电": {
-                "match": ["wish it was usb", "wish it had usb", "need usb c", "should be usb c",
-                         "proprietary charger", "usb c would", "type c would", "wish it used usb",
-                         "hate the charger", "weird charger", "replace the charger"]
-            },
-            "渴望更强水压/多档位": {
-                "match": ["wish it had more pressure", "need stronger", "more power would", "not enough pressure",
-                         "wish there were more setting", "need more mode", "only two setting"]
-            },
-            "渴望旅行收纳/便携改进": {
-                "match": ["wish it came with a case", "need a travel case", "travel bag would",
-                         "wish it was more compact", "too bulky for travel", "wish it had a travel",
-                         "need carrying case", "storage bag would"]
-            },
-            "渴望更易清洁维护": {
-                "match": ["wish it was easier to clean", "hard to clean", "difficult to clean",
-                         "mold issue", "can't clean properly", "wish the tank was removable",
-                         "needs to be easier to", "cleaning is a hassle"]
+            "体验优化建议": {
+                "match": ["improve", "suggestion", "recommend adding", "hope they", "next version",
+                         "future model", "upgrade"]
             },
         }
     },
     "🔄 复购/忠诚行为": {
-        "color": "#84cc16",
+        "color": "#10b981",
         "dim_type": "behavioral",
         "l2": {
-            "二次/多次购买": {
-                "match": ["second one", "third one", "bought another", "ordering another", "buy again",
-                         "purchase again", "another one for", "my second", "my third", "replacement after",
-                         "had to get another", "bought two", "bought multiple", "on my second"]
+            "复购/回购": {
+                "match": ["bought again", "second one", "third one", "another one", "repurchase",
+                         "buy more", "buying another", "ordered again"]
             },
             "推荐给他人": {
-                "match": ["recommend to", "told my", "suggested to", "everyone should", "recommended to",
-                         "highly recommend", "would recommend", "definitely recommend", "must have",
-                         "told everyone", "convinced my", "got my friend to", "made my husband/wife buy"]
+                "match": ["told my friend", "recommended to", "everyone should", "spread the word",
+                         "bought one for", "got one for", "convinced"]
             },
-            "品牌忠诚/长期使用": {
-                "match": ["been using for year", "loyal to", "always use", "can't switch", "never going back",
-                         "for life", "customer for", "been a user for", "only brand i", "wouldn't use anything else"]
+            "品牌粉丝": {
+                "match": ["fan", "love this brand", "always", "everything from", "loyal customer"]
+            },
+        }
+    },
+    "🛤️ 旅程阶段": {
+        "color": "#64748b",
+        "dim_type": "behavioral",
+        "l2": {
+            "研究对比阶段": {
+                "match": ["researching", "looking into", "considering", "compare", "debating", "deciding"]
+            },
+            "首次使用体验": {
+                "match": ["just got", "just received", "first time", "unboxing", "initial", "so far"]
+            },
+            "长期使用反馈": {
+                "match": ["been using", "months", "years", "long term", "after", "still", "update"]
+            },
+        }
+    },
+    "📢 声音类型": {
+        "color": "#f97316",
+        "dim_type": "behavioral",
+        "l2": {
+            "推荐分享": {
+                "match": ["recommend", "suggest", "must have", "best", "love", "highly", "everyone should"]
+            },
+            "竞品比较": {
+                "match": ["compared to", "better than", "vs", "instead of", "switched from"]
+            },
+            "提问求助": {
+                "match": ["how to", "how do", "question", "help", "anyone know", "does anyone", "is it"]
+            },
+            "感谢致意": {
+                "match": ["thank you", "thanks", "grateful", "appreciate", "love it", "changed my life"]
+            },
+        }
+    },
+    "💥 实际后果/影响": {
+        "color": "#ef4444",
+        "dim_type": "behavioral",
+        "l2": {
+            "健康/舒适改善": {
+                "match": ["feel better", "improvement", "relief", "no more", "stopped", "helped",
+                         "comfortable", "better", "healthier"]
+            },
+            "时间/效率提升": {
+                "match": ["save time", "faster", "quick", "efficient", "convenient", "easy"]
+            },
+            "经济/成本影响": {
+                "match": ["save money", "cheaper", "expensive", "worth it", "paid off", "investment"]
+            },
+        }
+    },
+    "🧠 心理/情感类型": {
+        "color": "#a855f7",
+        "dim_type": "behavioral",
+        "l2": {
+            "惊喜/超出预期": {
+                "match": ["surprised", "wow", "amazed", "didn't expect", "better than expected",
+                         "impressed", "blown away", "shocked"]
+            },
+            "安心/踏实": {
+                "match": ["peace of mind", "feel safe", "reassuring", "confident", "trust", "reliable"]
+            },
+            "困惑/迷茫": {
+                "match": ["confused", "don't understand", "not sure", "unclear", "complicated", "difficult"]
+            },
+            "失望/后悔": {
+                "match": ["disappointed", "regret", "wish i hadn't", "let down", "not what i expected",
+                         "waste", "returning"]
             },
         }
     },
 }
+
+
 
 # ============================================================
 # 1. Excel 加载
@@ -494,7 +469,16 @@ def extract_quote(text, keywords_matched, max_len=120):
 
 
 # ============================================================
-# 3. 标签提取主函数
+# 3. 辅助常量与工具函数
+# ============================================================
+DEFAULT_COLORS = [
+    "#2563eb", "#7c3aed", "#f59e0b", "#10b981", "#ef4444",
+    "#06b6d4", "#8b5cf6", "#ec4899", "#f97316", "#64748b",
+    "#14b8a6", "#3b82f6", "#a855f7", "#6366f1", "#0ea5e9"
+]
+
+# ============================================================
+# 4. 标签提取主函数
 # ============================================================
 def extract_tags(df, tag_system, product_name="产品", progress_callback=None):
     """
@@ -641,6 +625,12 @@ def extract_tags(df, tag_system, product_name="产品", progress_callback=None):
         product_name
     )
 
+    # --- Cross Analysis Matrix ---
+    cross_analysis = _generate_cross_analysis(tags, l1_stats)
+
+    # --- Keyword WordCloud ---
+    wordcloud_data = _generate_wordcloud_data(tags)
+
     # --- Chart Data ---
     l1_categories = [x[0] for x in l1_sorted if x[0] != "其他"]
     scatter_l1 = []
@@ -682,8 +672,119 @@ def extract_tags(df, tag_system, product_name="产品", progress_callback=None):
         "personas": insights["personas"],
         "scenarios": insights["scenarios"],
         "recommendations": insights["recommendations"],
+        "cross_analysis": cross_analysis,
+        "wordcloud": wordcloud_data,
     }
     return result
+
+
+# ============================================================
+# 3.5. 交叉分析与词云数据生成
+# ============================================================
+def _generate_cross_analysis(tags, l1_stats):
+    """
+    生成维度交叉分析矩阵
+    返回: {
+        "matrices": [
+            {"title": "用户画像 × 痛点维度", "rows": [...], "cols": [...], "data": [[count, ...], ...]},
+            ...
+        ]
+    }
+    """
+    from collections import defaultdict
+
+    # 定义交叉分析对
+    cross_pairs = [
+        ("👤 用户画像", ["核心功能与效果", "性能表现", "设计与做工", "易用性", "可靠性与售后"]),
+        ("📍 使用地点", ["核心功能与效果", "便携性", "电池与续航", "易用性"]),
+        ("⏰ 使用场景", ["核心功能与效果", "性能表现", "便携性", "电池与续航"]),
+        ("📢 声音类型", ["整体评价", "品牌与推荐度", "价格与价值"]),
+        ("🔮 未满足需求/期望", ["💥 实际后果/影响", "🧠 心理/情感类型"]),
+    ]
+
+    matrices = []
+
+    for dim1_name, dim2_list in cross_pairs:
+        # 统计共现
+        co_occurrence = defaultdict(lambda: defaultdict(int))
+
+        # 按 review 分组标签
+        review_tags = defaultdict(list)
+        for tag in tags:
+            review_tags[tag['rid']].append(tag)
+
+        # 计算共现次数
+        for rid, tag_list in review_tags.items():
+            l1_in_review = set(t['l1'] for t in tag_list)
+
+            if dim1_name in l1_in_review:
+                for dim2_name in dim2_list:
+                    if dim2_name in l1_in_review:
+                        # 获取具体的 L2 标签
+                        dim1_l2s = [t['l2'] for t in tag_list if t['l1'] == dim1_name]
+                        dim2_l2s = [t['l2'] for t in tag_list if t['l1'] == dim2_name]
+
+                        for l2_1 in dim1_l2s:
+                            for l2_2 in dim2_l2s:
+                                co_occurrence[l2_1][l2_2] += 1
+
+        # 如果有数据，构建矩阵
+        if co_occurrence:
+            rows = sorted(co_occurrence.keys(), key=lambda x: sum(co_occurrence[x].values()), reverse=True)[:8]
+            all_cols = set()
+            for r in rows:
+                all_cols.update(co_occurrence[r].keys())
+            cols = sorted(all_cols, key=lambda x: sum(co_occurrence[r].get(x, 0) for r in rows), reverse=True)[:8]
+
+            data = []
+            for row in rows:
+                data.append([co_occurrence[row].get(col, 0) for col in cols])
+
+            matrices.append({
+                "title": f"{dim1_name} × {', '.join(dim2_list[:2])}{'等' if len(dim2_list) > 2 else ''}",
+                "rows": rows,
+                "cols": cols,
+                "data": data
+            })
+
+    return {"matrices": matrices}
+
+
+def _generate_wordcloud_data(tags):
+    """
+    从标签的 keywords 中提取高频词，生成词云数据
+    返回: [{"name": "word", "value": count}, ...]
+    """
+    from collections import Counter
+    import re
+
+    # 停用词
+    stopwords = {
+        'the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by',
+        'from', 'as', 'is', 'was', 'are', 'were', 'been', 'be', 'have', 'has', 'had', 'do', 'does',
+        'did', 'will', 'would', 'could', 'should', 'may', 'might', 'can', 'this', 'that', 'these',
+        'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they', 'my', 'your', 'his', 'her', 'its',
+        'our', 'their', 'me', 'him', 'us', 'them', 'what', 'which', 'who', 'when', 'where', 'why',
+        'how', 'all', 'each', 'every', 'both', 'few', 'more', 'most', 'other', 'some', 'such',
+        'no', 'nor', 'not', 'only', 'own', 'same', 'so', 'than', 'too', 'very', 's', 't', 'just',
+        've', 'll', 'm', 're', 'd'
+    }
+
+    # 收集所有 keywords
+    word_counter = Counter()
+    for tag in tags:
+        keywords = tag.get('keywords', [])
+        for kw in keywords:
+            # 分词并清理
+            words = re.findall(r'\b[a-zA-Z]{3,}\b', kw.lower())
+            for word in words:
+                if word not in stopwords and len(word) > 2:
+                    word_counter[word] += 1
+
+    # 取 Top 80
+    top_words = word_counter.most_common(80)
+
+    return [{"name": word, "value": count} for word, count in top_words]
 
 
 # ============================================================
@@ -708,108 +809,107 @@ def auto_generate_insights(tags_data, product_name):
 
 
 def _generate_personas(tags_data, product_name):
-    """基于标签自动推断用户画像"""
-    personas = []
-
-    # 从标签中寻找线索
+    """
+    完全数据驱动：从实际打标的 '👤 用户画像' 维度提取真实画像。
+    不再使用硬编码模板，避免出现不适配品类的画像（如猫抓板的"便携/移动需求用户"）。
+    """
+    from collections import defaultdict
     tags = tags_data.get("tags", [])
-    all_text = " ".join([t.get("quote", "") for t in tags]).lower()
 
-    # 通用画像模板
-    templates = [
-        {
-            "name": "核心功能用户", "icon": "🎯",
-            "desc": f"最关注{product_name}核心功能的用户群体。他们追求最佳使用效果，对功能表现有较高要求。",
-            "triggers": ["effective", "works well", "great", "excellent", "best"],
-        },
-        {
-            "name": "便携/移动需求用户", "icon": "✈️",
-            "desc": f"经常出行、需要随时随地使用{product_name}的用户。看重便携性和续航能力。",
-            "triggers": ["travel", "portable", "cordless", "carry", "bag", "trip"],
-        },
-        {
-            "name": "性价比导向用户", "icon": "💰",
-            "desc": f"关注{product_name}价格与价值平衡的用户。会在不同品牌和型号间对比，追求最优性价比。",
-            "triggers": ["price", "worth", "value", "expensive", "cheap", "cost"],
-        },
-        {
-            "name": "新手/入门用户", "icon": "🌱",
-            "desc": f"首次使用{product_name}的用户。关注易用性、上手难度和学习成本。",
-            "triggers": ["first time", "easy to use", "simple", "learning", "new to"],
-        },
-        {
-            "name": "专业人士推荐型用户", "icon": "🧑‍⚕️",
-            "desc": f"受专业人士推荐而购买{product_name}的用户。品牌信任度高，忠诚度强。",
-            "triggers": ["recommended by", "dentist", "doctor", "professional", "prescribed"],
-        },
-        {
-            "name": "升级换代用户", "icon": "🔄",
-            "desc": f"从旧款或其他品牌升级到{product_name}的用户。关注新功能、性能提升和体验改善。",
-            "triggers": ["upgrade", "old", "previous", "replaced", "new version"],
-        },
-    ]
+    # 各 L2 用户画像标签的 icon 映射（品类通用）
+    persona_icons = {
+        "中老年用户(50+)": "👴", "父母/家庭购买者": "👨‍👩‍👧", "商务/差旅人士": "💼",
+        "新手/首次使用者": "🌱", "重度/资深用户": "⭐", "科技数码爱好者": "🔧",
+        "性价比/精明消费者": "💰", "礼物购买者": "🎁", "专业需求用户": "🧑‍⚕️",
+    }
 
-    # 过滤出与数据匹配的画像
-    matched = []
-    for tmpl in templates:
-        score = sum(1 for t in tmpl["triggers"] if t in all_text)
-        if score >= 2:
-            matched.append(tmpl)
+    # 聚合 👤 用户画像 维度下的 L2 标签
+    persona_stats = defaultdict(lambda: {"total": 0, "positive": 0, "quotes": []})
+    for t in tags:
+        if "用户画像" in t.get("l1", ""):
+            l2 = t.get("l2", "")
+            persona_stats[l2]["total"] += 1
+            if t.get("sentiment") == "positive":
+                persona_stats[l2]["positive"] += 1
+            q = t.get("quote", "").strip()
+            if q and len(q) > 15 and len(persona_stats[l2]["quotes"]) < 2:
+                persona_stats[l2]["quotes"].append(q)
 
-    # 至少保留4个画像
-    if len(matched) < 4:
-        # 添加通用画像
-        generic = [
-            {"name": "日常高频用户", "icon": "🏠",
-             "desc": f"将{product_name}纳入日常生活习惯的用户。使用频率高，对产品耐用性要求高。"},
-            {"name": "品质追求用户", "icon": "⭐",
-             "desc": f"对{product_name}品质和体验有高要求的用户。愿意为优质产品支付溢价。"},
-        ]
-        for g in generic:
-            if len(matched) < 6:
-                matched.append(g)
+    # 按提及次数排序，取真实存在的画像
+    sorted_personas = sorted(persona_stats.items(), key=lambda x: -x[1]["total"])
 
-    # 限制为6个
-    personas = matched[:6]
+    personas = []
+    for l2_name, stat in sorted_personas[:6]:
+        if stat["total"] < 1:
+            continue
+        pos_rate = round(stat["positive"] / stat["total"] * 100) if stat["total"] > 0 else 0
+        personas.append({
+            "name": l2_name,
+            "icon": persona_icons.get(l2_name, "👤"),
+            "desc": f"该群体在评论中被提及 {stat['total']} 次，正面率 {pos_rate}%。"
+                    f"是{product_name}的重要目标用户之一，值得针对性运营。",
+            "quotes": stat["quotes"],
+        })
 
-    # 为每个画像补充示例quote
-    for p in personas:
-        p["quotes"] = _find_relevant_quotes(tags, p["triggers"], 2)
+    # 数据不足时的兜底（仍基于真实数据，仅提示）
+    if not personas:
+        personas.append({
+            "name": "核心用户群", "icon": "👤",
+            "desc": f"当前评论中用户画像维度标签较少，建议补充更多评论数据以获得精准画像。",
+            "quotes": [],
+        })
 
     return personas
 
 
 def _generate_scenarios(tags_data, product_name):
-    """自动生成使用场景"""
+    """
+    完全数据驱动：从实际打标的 '📍 使用地点' + '⏰ 使用场景' 维度提取真实场景。
+    不再使用硬编码模板（如冲牙器的"旅行/出差场景"）。
+    """
+    from collections import defaultdict
     tags = tags_data.get("tags", [])
-    all_text = " ".join([t.get("quote", "") for t in tags]).lower()
 
-    scenario_templates = [
-        {"name": f"日常{product_name}使用", "icon": "🪥",
-         "desc": f"最主流的使​用场景，用户将{product_name}作为日常生活的一部分。",
-         "triggers": ["daily", "every day", "routine", "morning", "night"]},
-        {"name": "旅行/出差场景", "icon": "✈️",
-         "desc": f"用户需要在旅途中使用{product_name}。便携性、续航和收纳是关键需求。",
-         "triggers": ["travel", "trip", "vacation", "hotel", "abroad"]},
-        {"name": "特殊需求场景", "icon": "🎯",
-         "desc": f"特殊需求用户使用{product_name}的场景。这类用户通常由专业渠道引导购买。",
-         "triggers": ["braces", "implant", "sensitive", "special", "medical"]},
-        {"name": "家庭共享场景", "icon": "👨‍👩‍👧‍👦",
-         "desc": f"家庭成员共用{product_name}的场景。关注多人使用的便利性和卫生。",
-         "triggers": ["family", "husband", "wife", "kid", "everyone"]},
-    ]
+    # 场景 L2 标签的 icon 映射（品类通用）
+    scenario_icons = {
+        "家庭/室内": "🏠", "户外/露营/房车": "🏕️", "办公室/工作场所": "🏢",
+        "健身房/运动场": "💪", "日常例行": "📅", "特定活动前后": "⏰",
+        "休闲时使用": "🛋️", "特殊场合/需求": "🎯",
+    }
 
-    matched = []
-    for tmpl in scenario_templates:
-        score = sum(1 for t in tmpl["triggers"] if t in all_text)
-        if score >= 1:
-            matched.append(tmpl)
+    # 聚合 使用地点 + 使用场景 维度下的 L2 标签
+    scenario_stats = defaultdict(lambda: {"total": 0, "positive": 0, "l1": ""})
+    for t in tags:
+        l1 = t.get("l1", "")
+        if "使用地点" in l1 or "使用场景" in l1:
+            l2 = t.get("l2", "")
+            scenario_stats[l2]["total"] += 1
+            scenario_stats[l2]["l1"] = l1
+            if t.get("sentiment") == "positive":
+                scenario_stats[l2]["positive"] += 1
 
-    if len(matched) < 2:
-        matched.append(scenario_templates[0])
-        matched.append(scenario_templates[1])
+    sorted_scenarios = sorted(scenario_stats.items(), key=lambda x: -x[1]["total"])
 
-    return matched[:4]
+    scenarios = []
+    for l2_name, stat in sorted_scenarios[:4]:
+        if stat["total"] < 1:
+            continue
+        pos_rate = round(stat["positive"] / stat["total"] * 100) if stat["total"] > 0 else 0
+        dim_type = "使用地点" if "使用地点" in stat["l1"] else "使用时机"
+        scenarios.append({
+            "name": l2_name,
+            "icon": scenario_icons.get(l2_name, "📍"),
+            "desc": f"【{dim_type}】评论中被提及 {stat['total']} 次，正面率 {pos_rate}%。"
+                    f"是{product_name}的核心使用场景，可用于场景化营销和网站视觉设计。",
+        })
+
+    if not scenarios:
+        scenarios.append({
+            "name": "日常使用场景", "icon": "🏠",
+            "desc": f"当前评论中使用场景维度标签较少，建议补充更多评论数据。",
+        })
+
+    return scenarios
 
 
 def _generate_recommendations(pain_points, strengths_list, product_name):
@@ -1030,6 +1130,50 @@ def build_report_html(tags_data, product_config=None):
     </div>""")
         return "\n".join(cards)
 
+    def build_cross_analysis():
+        """构建交叉分析矩阵的 HTML + 热力图"""
+        cross_data = tags_data.get('cross_analysis', {})
+        matrices = cross_data.get('matrices', [])
+
+        if not matrices:
+            return '<p style="color:#94a3b8;">暂无交叉分析数据</p>'
+
+        html_parts = []
+        for idx, matrix in enumerate(matrices):
+            title = matrix['title']
+            rows = matrix['rows']
+            cols = matrix['cols']
+            data = matrix['data']
+
+            # 表格
+            table_html = f'<h4 style="margin:24px 0 12px;color:#334155;">{title}</h4>'
+            table_html += '<div style="overflow-x:auto;"><table class="data-table" style="font-size:0.88em;"><thead><tr><th style="min-width:120px;">维度</th>'
+            for col in cols:
+                table_html += f'<th style="min-width:100px;">{col}</th>'
+            table_html += '</tr></thead><tbody>'
+
+            for i, row in enumerate(rows):
+                table_html += f'<tr><td><b>{row}</b></td>'
+                for val in data[i]:
+                    color = '#f1f5f9' if val == 0 else f'rgba(37, 99, 235, {min(val/20, 0.8)})'
+                    table_html += f'<td style="background:{color};text-align:center;">{val if val > 0 else "-"}</td>'
+                table_html += '</tr>'
+            table_html += '</tbody></table></div>'
+
+            # 热力图
+            heatmap_id = f'heatmap-{idx}'
+            table_html += f'<div id="{heatmap_id}" class="chart-container" style="height:400px;margin-top:16px;"></div>'
+
+            html_parts.append(table_html)
+
+        return "\n".join(html_parts)
+
+    def build_wordcloud_js():
+        """生成词云的 JS 数据"""
+        wordcloud_data = tags_data.get('wordcloud', [])
+        return json.dumps(wordcloud_data, ensure_ascii=False)
+
+
     def build_marketing_strategy():
         """基于实际标签数据动态生成营销战略方向"""
         def _top_l2(l1_prefix, n=3, min_mention=1):
@@ -1054,18 +1198,22 @@ def build_report_html(tags_data, product_config=None):
             return result
 
         def _extract_competitor_names():
+            """从评论中提取竞品名称（通用方法：大写开头的连续词 + 常见品牌模式）"""
             names = set()
-            competitor_kw = ['Waterpik', 'waterpik', 'Philips', 'philips', 'Oral-B', 'oral-b',
-                           'Sonicare', 'sonicare', 'Furbo', 'furbo', 'Petcube', 'petcube',
-                           'Wyze', 'wyze', 'Ring', 'ring', 'Skymee', 'skymee', 'Enabot', 'enabot',
-                           'EBO', 'ebo', 'COSLUS', 'coslus', 'AquaSonic', 'H2ofloss', 'MySmile',
-                           'Bitvae', 'Nicwell', 'Turewell', 'Pawbo', 'Petzi', 'Victure']
+            # 通用竞品识别：从 "竞品对比" 标签的 quote/keywords 中提取品牌名
             for t in tags_data.get('tags', []):
                 if '品牌/竞品对比' in t['l1'] or '竞品对比' in t['l2']:
-                    q = (t.get('quote', '') + ' ' + ' '.join(t.get('keywords', []))).lower()
-                    for kw in competitor_kw:
-                        if kw.lower() in q:
-                            names.add(kw)
+                    text = t.get('quote', '') + ' ' + ' '.join(t.get('keywords', []))
+                    # 提取大写开头的单词（可能是品牌名）
+                    import re
+                    brands = re.findall(r'\b[A-Z][a-z]+(?:[A-Z][a-z]+)*\b', text)
+                    # 过滤掉常见非品牌词
+                    stop_words = {'This', 'That', 'Which', 'When', 'Where', 'What', 'Why', 'How',
+                                 'The', 'My', 'Your', 'Their', 'Better', 'Good', 'Bad', 'Great',
+                                 'Love', 'Hate', 'Much', 'Very', 'Really', 'Just', 'More', 'Less'}
+                    for b in brands:
+                        if b not in stop_words and len(b) > 2:
+                            names.add(b)
             return sorted(names)[:5]
 
         # Extract real data
@@ -1199,6 +1347,7 @@ def build_report_html(tags_data, product_config=None):
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{product_name}用户评论深度分析报告</title>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/echarts-wordcloud@2.1.0/dist/echarts-wordcloud.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
   * {{ margin: 0; padding: 0; box-sizing: border-box; }}
@@ -1321,6 +1470,19 @@ def build_report_html(tags_data, product_config=None):
 </div>
 
 <div class="section">
+  <div class="section-title">🔗 维度交叉分析矩阵</div>
+  <p style="color:#64748b; margin-bottom:16px; font-size:0.92em;">不同行为维度之间的共现关系，帮助发现用户群体的深层需求模式和痛点来源。</p>
+  {build_cross_analysis()}
+</div>
+
+<div class="section">
+  <div class="section-title">☁️ 用户高频关键词词云</div>
+  <p style="color:#64748b; margin-bottom:16px; font-size:0.92em;">从 {meta['total_tags']} 条标签中提取的高频关键词，字体越大表示出现频率越高。</p>
+  <div id="wordcloud" class="chart-container" style="height:500px;"></div>
+</div>
+
+
+<div class="section">
   <div class="section-title">📑 附录：标签体系明细表（一级 → 二级）</div>
   <p style="color:#64748b; margin-bottom:8px; font-size:0.92em;">完整标签数据，按一级类目分组，展示所有二级标签的提及次数、正负面分布和正面率。</p>
   <table class="data-table">
@@ -1350,6 +1512,10 @@ Object.keys(colorMap).forEach(function(name) {{
 
 // Scatter L2
 {build_scatter_l2_js()}
+// 自适应气泡大小：根据最大提及次数动态调整缩放比例
+var maxMentionL2 = Math.max.apply(null, scatterData.map(function(d) {{ return d.value[0]; }}));
+var bubbleScaleL2 = maxMentionL2 > 200 ? 0.25 : (maxMentionL2 > 100 ? 0.4 : (maxMentionL2 > 50 ? 0.8 : 1.5));
+var maxBubbleSizeL2 = 60;  // L2标签气泡最大直径
 var seriesMap = {{}};
 scatterData.forEach(function(d) {{
   if (!seriesMap[d.L1]) seriesMap[d.L1] = [];
@@ -1360,9 +1526,10 @@ Object.keys(seriesMap).forEach(function(l1) {{
   scatterSeries.push({{
     name: l1, type: 'scatter',
     data: seriesMap[l1].map(function(d) {{
+      var size = Math.min(Math.max(d.value[0] * bubbleScaleL2, 12), maxBubbleSizeL2);
       return {{
         name: d.name, value: d.value,
-        symbolSize: Math.max(d.value[0] * 1.8, 12),
+        symbolSize: size,
         itemStyle: {{ color: colorMap[l1] || '#6b7280' }},
         label: {{ show: d.value[0] >= 8, formatter: d.name, position: 'right', fontSize: 11, color: '#475569' }}
       }};
@@ -1404,6 +1571,10 @@ chart2.setOption({{
 // Scatter L1
 {build_scatter_l1_js()}
 var chart3 = echarts.init(document.getElementById('scatter-l1'));
+// 自适应气泡大小：根据最大提及次数动态调整缩放比例
+var maxMention = Math.max.apply(null, l1Data.map(function(d) {{ return d.value[0]; }}));
+var bubbleScale = maxMention > 200 ? 0.3 : (maxMention > 100 ? 0.5 : 0.8);
+var maxBubbleSize = 80;  // 最大气泡直径限制
 chart3.setOption({{
   tooltip: {{ trigger: 'item', formatter: function(p) {{ return '<b>' + p.name + '</b><br/>提及次数: ' + p.value[0] + '<br/>正面率: ' + p.value[1] + '%<br/>正面: ' + p.data.positive + ' / 负面: ' + p.data.negative; }} }},
   grid: {{ left: '8%', right: '5%', top: '8%', bottom: '12%' }},
@@ -1412,7 +1583,8 @@ chart3.setOption({{
   series: [{{
     type: 'scatter',
     data: l1Data.map(function(d) {{
-      return {{ name: d.name, value: d.value, positive: d.positive, negative: d.negative, symbolSize: Math.max(d.value[0] * 0.8, 20), itemStyle: {{ color: colorMap[d.name] || '#6b7280' }}, label: {{ show: true, formatter: d.name, position: 'right', fontSize: 12, color: '#334155', fontWeight: 500 }} }};
+      var size = Math.min(Math.max(d.value[0] * bubbleScale, 20), maxBubbleSize);
+      return {{ name: d.name, value: d.value, positive: d.positive, negative: d.negative, symbolSize: size, itemStyle: {{ color: colorMap[d.name] || '#6b7280' }}, label: {{ show: true, formatter: d.name, position: 'right', fontSize: 12, color: '#334155', fontWeight: 500 }} }};
     }})
   }}, {{
     type: 'scatter', data: [],
@@ -1422,6 +1594,63 @@ chart3.setOption({{
     ] }}
   }}]
 }});
+
+// Cross Analysis Heatmaps
+var crossData = {json.dumps(tags_data.get('cross_analysis', {}).get('matrices', []), ensure_ascii=False)};
+crossData.forEach(function(matrix, idx) {{
+  var heatmapId = 'heatmap-' + idx;
+  var heatmapEl = document.getElementById(heatmapId);
+  if (!heatmapEl) return;
+
+  var chartHeat = echarts.init(heatmapEl);
+  var heatData = [];
+  matrix.data.forEach(function(row, i) {{
+    row.forEach(function(val, j) {{
+      heatData.push([j, i, val]);
+    }});
+  }});
+
+  chartHeat.setOption({{
+    tooltip: {{ position: 'top', formatter: function(p) {{ return matrix.rows[p.value[1]] + ' × ' + matrix.cols[p.value[0]] + ': ' + p.value[2] + ' 次'; }} }},
+    grid: {{ left: '18%', right: '5%', top: '5%', bottom: '18%' }},
+    xAxis: {{ type: 'category', data: matrix.cols, splitArea: {{ show: true }}, axisLabel: {{ rotate: 45, fontSize: 11 }} }},
+    yAxis: {{ type: 'category', data: matrix.rows, splitArea: {{ show: true }}, axisLabel: {{ fontSize: 11 }} }},
+    visualMap: {{ min: 0, max: Math.max.apply(null, heatData.map(function(d) {{ return d[2]; }})), calculable: true, orient: 'horizontal', left: 'center', bottom: '0%', inRange: {{ color: ['#f0f9ff', '#bfdbfe', '#60a5fa', '#2563eb', '#1e40af'] }} }},
+    series: [{{ name: '共现次数', type: 'heatmap', data: heatData, label: {{ show: true, fontSize: 10 }}, emphasis: {{ itemStyle: {{ shadowBlur: 10, shadowColor: 'rgba(0, 0, 0, 0.5)' }} }} }}]
+  }});
+}});
+
+// WordCloud
+var wordcloudData = {build_wordcloud_js()};
+if (wordcloudData.length > 0) {{
+  var chartCloud = echarts.init(document.getElementById('wordcloud'));
+  chartCloud.setOption({{
+    tooltip: {{ show: true, formatter: function(p) {{ return p.name + ': ' + p.value + ' 次'; }} }},
+    series: [{{
+      type: 'wordCloud',
+      shape: 'circle',
+      left: 'center',
+      top: 'center',
+      width: '90%',
+      height: '90%',
+      sizeRange: [14, 52],
+      rotationRange: [-30, 30],
+      rotationStep: 15,
+      gridSize: 8,
+      drawOutOfBound: false,
+      textStyle: {{
+        fontFamily: 'Noto Sans SC, sans-serif',
+        fontWeight: 'bold',
+        color: function() {{
+          var colors = ['#2563eb', '#7c3aed', '#db2777', '#ea580c', '#059669', '#0891b2'];
+          return colors[Math.floor(Math.random() * colors.length)];
+        }}
+      }},
+      emphasis: {{ focus: 'self', textStyle: {{ shadowBlur: 10, shadowColor: '#333' }} }},
+      data: wordcloudData
+    }}]
+  }});
+}}
 
 window.addEventListener('resize', function() {{ chart1.resize(); chart2.resize(); chart3.resize(); }});
 </script>
@@ -1445,7 +1674,7 @@ def load_tag_system(filepath):
         return json.load(f)
 
 def get_default_tag_system():
-    """返回默认的冲牙器标签体系"""
+    """返回默认的标签体系框架"""
     import copy
     return copy.deepcopy(DEFAULT_TAG_SYSTEM)
 
