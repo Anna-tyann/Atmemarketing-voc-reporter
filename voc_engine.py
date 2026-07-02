@@ -163,7 +163,9 @@ BEHAVIORAL_DIMENSIONS = {
                 "match": ["daily", "every day", "morning", "evening", "routine", "regularly", "habit"]
             },
             "特定活动前后": {
-                "match": ["before", "after", "pre", "post", "during", "while", "when"]
+                "match": ["before and after", "right before", "right after", "pre workout",
+                         "post workout", "during my", "while i", "when i", "after using",
+                         "before using", "before going", "after waking"]
             },
             "休闲时使用": {
                 "match": ["watch tv", "relax", "leisure", "free time", "weekend", "downtime"]
@@ -178,9 +180,17 @@ BEHAVIORAL_DIMENSIONS = {
         "dim_type": "behavioral",
         "l2": {
             "中老年用户(50+)": {
-                "match": ["senior", "older", "elder", "age", "50", "60", "70", "80",
-                         "retired", "at my age", "as a", "years old", "elderly",
-                         "grandma", "grandpa", "grandparent"]
+                "match": ["senior citizen", "senior cat", "senior dog", "elderly",
+                         "retired", "at my age",
+                         "in my 50s", "in my 60s", "in my 70s", "in my 80s",
+                         "over 50", "over 60", "over 70",
+                         "grandma", "grandpa", "grandparent", "great grandma",
+                         "aging parent", "aging body", "aging joints",
+                         "old age", "getting older", "older adult", "older people",
+                         "older person", "older folks", "older couple",
+                         "old man", "old lady", "old woman",
+                         "i am 50", "i am 60", "i am 70", "i am 80",
+                         "i'm 50", "i'm 60", "i'm 70", "i'm 80"]
             },
             "父母/家庭购买者": {
                 "match": ["my kid", "my child", "my son", "my daughter", "my children", "my teenager",
@@ -316,8 +326,9 @@ BEHAVIORAL_DIMENSIONS = {
         "dim_type": "behavioral",
         "l2": {
             "健康/舒适改善": {
-                "match": ["feel better", "improvement", "relief", "no more", "stopped", "helped",
-                         "comfortable", "better", "healthier"]
+                "match": ["feel better", "improvement", "relief", "no more pain", "stopped hurting",
+                         "helped with", "comfortable", "healthier", "feeling better", "much better now",
+                         "so much better", "feels so much", "no longer"]
             },
             "时间/效率提升": {
                 "match": ["save time", "faster", "quick", "efficient", "convenient", "easy"]
@@ -478,6 +489,32 @@ DEFAULT_COLORS = [
 ]
 
 # ============================================================
+# 3.5 关键词词边界匹配（避免子串误匹配，如 age->package, older->holder）
+# ============================================================
+_KW_PATTERN_CACHE = {}
+
+
+def _kw_in_text(kw, text):
+    """
+    词边界匹配：关键词必须作为完整词/短语出现，而非任意子串。
+    修复历史 bug：短词 'age' 命中 package/usage/damage，'older' 命中 holder，
+    'aging' 命中 packaging，导致所有品类报告的用户画像都错误偏向"中老年用户"。
+
+    - 首尾为字母/数字的关键词用 \\b 词边界包裹
+    - 含空格的短语（如 'before and after'）同样按词边界匹配，内部空格允许任意空白
+    """
+    pat = _KW_PATTERN_CACHE.get(kw)
+    if pat is None:
+        # 关键词内部空白归一化为 \s+，允许 "over  50" / 换行等
+        escaped = r"\s+".join(re.escape(part) for part in kw.split())
+        left = r"\b" if kw[:1].isalnum() else ""
+        right = r"\b" if kw[-1:].isalnum() else ""
+        pat = re.compile(left + escaped + right)
+        _KW_PATTERN_CACHE[kw] = pat
+    return pat.search(text) is not None
+
+
+# ============================================================
 # 4. 标签提取主函数
 # ============================================================
 def extract_tags(df, tag_system, product_name="产品", progress_callback=None):
@@ -512,7 +549,7 @@ def extract_tags(df, tag_system, product_name="产品", progress_callback=None):
                 combo_key = f"{l1_name}|{l2_name}"
                 if combo_key in tagged_combos:
                     continue
-                matched_kw = [kw for kw in l2_config.get("match", []) if kw in full_text]
+                matched_kw = [kw for kw in l2_config.get("match", []) if _kw_in_text(kw, full_text)]
                 if not matched_kw:
                     continue
                 sentiment = determine_tag_sentiment(full_text, rating, matched_kw)
